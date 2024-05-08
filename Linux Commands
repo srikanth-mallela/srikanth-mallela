@@ -1,0 +1,7 @@
+mkdir srikanth
+cd srikanth
+mkdir linux_refresher
+cd linux_refresher
+pwd
+cat <filename>
+who am i
