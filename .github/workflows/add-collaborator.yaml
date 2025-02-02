@@ -1,0 +1,35 @@
+name: Add User to Repo with Read-Only Access
+
+on:
+  workflow_dispatch:
+    inputs:
+      username:
+        description: 'Username of the person to add'
+        required: true
+        type: string
+      repo_name:
+        description: 'Repository name (owner/repository-name)'
+        required: true
+        type: string
+
+jobs:
+  add-user-permissions:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v3
+
+      - name: Add User to Repo with Read-Only Access
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  # Use GitHub token for authentication
+        run: |
+          # Set variables dynamically from inputs
+          USERNAME="${{ github.event.inputs.username }}"
+          REPO="${{ github.event.inputs.repo_name }}"
+          PERMISSION="read"  # Set read-only permission
+
+          # Add user to the repository with read-only access
+          curl -X PUT -H "Authorization: token $GITHUB_TOKEN" \
+            -d "{\"permission\":\"$PERMISSION\"}" \
+            "https://api.github.com/repos/$REPO/collaborators/$USERNAME"
